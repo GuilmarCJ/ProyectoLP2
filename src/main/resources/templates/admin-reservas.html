@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reservas - Moderador | CanCan Restaurante</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        body {
+            background-image: url('https://source.unsplash.com/random/1600x900/?restaurant,tables');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding-top: 3rem;
+        }
+
+        .reserva-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin: auto;
+            max-width: 1000px;
+        }
+
+        .reserva-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .reserva-header i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+        }
+
+        .reserva-header h2 {
+            font-weight: bold;
+            color: #2d3436;
+        }
+
+        table thead th {
+            background-color: var(--primary-color);
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .estado-btn {
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.3s ease;
+        }
+
+        .estado-en-espera {
+            background-color: var(--warning-color);
+            color: black;
+        }
+
+        .estado-recibido {
+            background-color: var(--success-color);
+        }
+
+        .estado-cancelado {
+            background-color: var(--danger-color);
+        }
+
+        .btn-sm {
+            font-size: 0.85rem;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            transition: 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="reserva-container">
+        <div class="reserva-header">
+            <i class="fas fa-calendar-check"></i>
+            <h2>Reservas Registradas</h2>
+            <p class="text-muted">Panel de control del moderador</p>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Personas</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="reserva : ${reservas}">
+                        <td th:text="${reserva.nombre}">Nombre</td>
+                        <td th:text="${reserva.correo}">Correo</td>
+                        <td th:text="${reserva.fecha}">Fecha</td>
+                        <td th:text="${reserva.hora}">Hora</td>
+                        <td th:text="${reserva.personas}">0</td>
+                        <td>
+                            <form th:action="@{/admin/reservas/cambiar-estado}" method="post">
+                                <input type="hidden" name="id" th:value="${reserva.id}" />
+                                <input type="hidden" name="estadoActual" th:value="${reserva.estado}" />
+                                <button type="submit"
+                                        class="estado-btn"
+                                        th:classappend="| ${reserva.estado == 'en espera' ? 'estado-en-espera' : 
+                                                           reserva.estado == 'recibido' ? 'estado-recibido' :
+                                                           reserva.estado == 'cancelado' ? 'estado-cancelado' : ''} |"
+                                        th:text="${reserva.estado}">
+                                    Estado
+                                </button>
+                            </form>
+                        </td>
+                        <td>
+                            <form th:action="@{/admin/reservas/eliminar}" method="post">
+                                <input type="hidden" name="id" th:value="${reserva.id}" />
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash-alt me-1"></i> Eliminar
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center mt-4">
+            <a th:href="@{/logout}" class="btn btn-secondary">
+                <i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reservar Mesa - CanCan Restaurante</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a29bfe;
+            --dark-color: #2d3436;
+        }
+
+        body {
+            background-image: url('https://source.unsplash.com/random/1600x900/?restaurant,table');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .reserva-container {
+            max-width: 550px;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            border-top: 5px solid var(--primary-color);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .reserva-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .reserva-header i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .reserva-header h2 {
+            color: var(--dark-color);
+            font-weight: 700;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .form-control {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(108, 92, 231, 0.25);
+        }
+
+        .input-group-text {
+            background-color: #f1f1f1;
+            border-right: none;
+        }
+
+        .input-with-icon {
+            border-left: none;
+        }
+
+        .btn-reservar {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 12px;
+            font-weight: 600;
+            width: 100%;
+            border-radius: 8px;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-reservar:hover {
+            background-color: #5649c0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="reserva-container">
+        <div class="reserva-header">
+            <i class="fas fa-calendar-alt"></i>
+            <h2>Reservar Mesa</h2>
+        </div>
+
+        <form th:action="@{/reservar}" method="post">
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    <input type="text" class="form-control input-with-icon" name="nombre" required placeholder="Tu nombre">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Correo</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                    <input type="email" class="form-control input-with-icon" name="correo" required placeholder="tucorreo@ejemplo.com">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Fecha</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-calendar-day"></i></span>
+                    <input type="date" class="form-control input-with-icon" name="fecha" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Hora</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                    <input type="time" class="form-control input-with-icon" name="hora" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Número de Personas</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-users"></i></span>
+                    <input type="number" class="form-control input-with-icon" name="personas" required min="1" placeholder="Ej: 2">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-reservar">
+                <i class="fas fa-check-circle me-2"></i> Reservar Ahora
+            </button>
+        </form>
+
+        <div th:if="${mensaje}" class="alert alert-success mt-3" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <span th:text="${mensaje}"></span>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger mt-3" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span th:text="${error}"></span>
+        </div>
+    </div>
+
+	<div th:if="${error}" class="alert alert-danger text-center" role="alert">
+    <span th:text="${error}">Ya tienes una reserva activa.</span>
+	</div>
+	
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
